@@ -11,6 +11,7 @@ __pycache__/
 venv
 #Dataset
 dataset
+inference_dataset
 #Saved models
 models
 #Saved logs

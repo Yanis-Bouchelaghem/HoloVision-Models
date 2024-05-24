@@ -40,6 +40,16 @@ class CNNModel(L.LightningModule):
         self.log("validation_loss", loss, prog_bar=True, on_epoch=True)
         self.log("validation_accuracy", accuracy, prog_bar=True, on_epoch=True)
         return loss
+    
+    def test_step(self, batch, batch_idx):
+        input_batch, target = batch
+        logits = self(input_batch).squeeze()
+        accuracy = self.accuracy_metric(logits, target)
+        target = target.to(torch.float32)  # Convert labels to float32
+        loss = torch.nn.functional.binary_cross_entropy_with_logits(logits, target)
+        self.log("test_loss", loss, prog_bar=True, on_epoch=True)
+        self.log("test_accuracy", accuracy, prog_bar=True, on_epoch=True)
+        return loss
 
     def configure_optimizers(self):
         optimizer = Adam(self.parameters(), lr=self.lr)
